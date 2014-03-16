@@ -2,7 +2,8 @@ game.module(
     'game.scenes'
 )
 .require(
-    'engine.scene'
+    'engine.scene',
+    'engine.keyboard'
 )
 .body(function() {
 
@@ -87,6 +88,19 @@ SceneGame = game.Scene.extend({
             this.addTimer(this.gapTime, this.spawnGap.bind(this), true);
         }
         this.player.jump();
+    },
+
+    keydown: function(key) {
+        if(key === 'SPACE'){
+            if(this.ended) return;
+            if(this.player.body.mass === 0) {
+                game.analytics.event('play');
+                this.player.body.mass = 1;
+                this.logo.remove();
+                this.addTimer(this.gapTime, this.spawnGap.bind(this), true);
+            }
+            this.player.jump();
+        }
     },
 
     showScore: function() {
